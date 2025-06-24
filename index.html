@@ -126,18 +126,18 @@ I take no responsibility for anything that happens if you choose to ignore this 
       <section>
         <h2>Examples</h2>
         A few examples of the element in action, the sqlite database used can be
-        downloaded <a href="/pets.db" download>here</a> to browse in a more sane
+        downloaded <a href="pets.db" download>here</a> to browse in a more sane
         way.
         <h3>Simple select all</h3>
         <p>List of users with their IDs, names, and ages.</p>
-        <pre><code class="example">&lt;sql-table database=&quot;/pets.db&quot; query=&quot;select * from users&quot;&gt;&lt;/sql-table&gt;</code></pre>
-        <sql-table database="/pets.db" query="select * from users"></sql-table>
+        <pre><code class="example">&lt;sql-table database=&quot;pets.db&quot; query=&quot;select * from users&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <sql-table database="pets.db" query="select * from users"></sql-table>
 
         <h3>Choosing specific columns and filtering</h3>
         <p>Table headings will reflect the column names used in the query</p>
-        <pre><code>&lt;sql-table database=&quot;/pets.db&quot; query=&quot;select name, type as animal from pets where owner = 1&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre><code>&lt;sql-table database=&quot;pets.db&quot; query=&quot;select name, type as animal from pets where owner = 1&quot;&gt;&lt;/sql-table&gt;</code></pre>
         <sql-table
-          database="/pets.db"
+          database="pets.db"
           query="select name, type as animal from pets where owner = 1"
         ></sql-table>
 
@@ -148,10 +148,10 @@ I take no responsibility for anything that happens if you choose to ignore this 
           so they're very pointless.
         </p>
         <pre><code>&lt;sql-table 
-  database=&quot;/pets.db&quot; 
+  database=&quot;pets.db&quot; 
   query=&quot;select u.name, count(1) as 'pet count' from pets p join users u on p.owner = u.id group by p.owner&quot;&lt;/sql-table&gt;</code></pre>
         <sql-table
-          database="/pets.db"
+          database="pets.db"
           query="select distinct u.name, count(1) as 'pet count' from pets p join users u on p.owner = u.id group by p.owner"
         ></sql-table>
 
@@ -160,9 +160,9 @@ I take no responsibility for anything that happens if you choose to ignore this 
           Well, what did you expect? If there are no results from the query the
           table will still be displayed, it just won't have any rows.
         </p>
-        <pre><code>&lt;sql-table database=&quot;/pets.db&quot; query=&quot;select * from pets where owner = 1000&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre><code>&lt;sql-table database=&quot;pets.db&quot; query=&quot;select * from pets where owner = 1000&quot;&gt;&lt;/sql-table&gt;</code></pre>
         <sql-table
-          database="/pets.db"
+          database="pets.db"
           query="select * from pets where owner = 1000"
         ></sql-table>
 
@@ -171,8 +171,8 @@ I take no responsibility for anything that happens if you choose to ignore this 
           Did I mention there's no error handling? If the database file doesn't
           exist or the query has invalid syntax things get a bit messy...
         </p>
-        <pre><code>&lt;sql-table database=&quot;/pets.db&quot; query=&quot;select ???&quot;&gt;&lt;/sql-table&gt;</code></pre>
-        <sql-table database="/pets.db" query="select ???"></sql-table>
+        <pre><code>&lt;sql-table database=&quot;pets.db&quot; query=&quot;select ???&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <sql-table database="pets.db" query="select ???"></sql-table>
       </section>
     </main>
   </body>
