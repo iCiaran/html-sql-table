@@ -28,15 +28,18 @@
               language: "sql",
             }).value;
 
-            const textElement = el.outerHTML.replace(query, placeholder);
+            const textElement = el.outerHTML.replace(
+              `query="${query}"`,
+              placeholder
+            );
             const highlightedElement = hljs.highlight(textElement, {
               language: "html",
             }).value;
 
             const codeElement = document.createElement("code");
             codeElement.innerHTML = highlightedElement.replace(
-              placeholder,
-              highlightedQuery
+              `<span class="hljs-attr">${placeholder}</span>`,
+              `<span class="hljs-attr">query</span>=&quot;${highlightedQuery}&quot;`
             );
             previousSibling.appendChild(codeElement);
             previousSibling.removeAttribute("class");
