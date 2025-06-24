@@ -111,3 +111,26 @@ ul li {
 ul li::marker {
   color: #666;
 }
+
+blockquote {
+  margin: 1.5em 0;
+  padding: 0.5em 1.5em;
+  background: #f0f4f8;
+  border-left: 4px solid #90a4ae;
+  font-style: italic;
+  color: #333;
+  border-radius: 4px;
+  font-synthesis: none;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+blockquote cite {
+  display: block;
+  margin-top: 0.5em;
+  font-style: normal;
+  color: #666;
+  font-size: 0.9em;
+}
