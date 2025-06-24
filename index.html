@@ -36,10 +36,11 @@
               language: "html",
             }).value;
 
+            const quote = '<span class="hljs-string">&quot;</span>';
             const codeElement = document.createElement("code");
             codeElement.innerHTML = highlightedElement.replace(
               `<span class="hljs-attr">${placeholder}</span>`,
-              `<span class="hljs-attr">query</span>=&quot;${highlightedQuery}&quot;`
+              `<span class="hljs-attr">query</span>=${quote}${highlightedQuery}${quote}`
             );
             previousSibling.appendChild(codeElement);
             previousSibling.removeAttribute("class");
