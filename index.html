@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SQL Table Custom Element</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="highlight.js/github-dark.min.css"/>
+    <link rel="stylesheet" href="highlight.js/github-dark.min.css" />
     <!-- favicon from https://icons8.com/icon/1476/database" -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
@@ -13,21 +13,33 @@
     <script src="sql-table.js" type="module"></script>
     <script src="highlight.js/highlight.min.js"></script>
     <script>
-      hljs.configure({languages:["html", "sql"]});
+      hljs.configure({ languages: ["html", "sql"] });
 
-      document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('pre>code').forEach(el => {
-          hljs.highlightElement(el);
-        });
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const placeholder = "__PLACEHOLDER__";
+        document.querySelectorAll("sql-table").forEach((el) => {
+          const previousSibling = el.previousElementSibling;
+          if (
+            previousSibling &&
+            previousSibling.className === "example-placeholder"
+          ) {
+            const query = el.getAttribute("query");
+            const highlightedQuery = hljs.highlight(query, {
+              language: "sql",
+            }).value;
 
-        document.querySelectorAll('pre>code.language-html .hljs-string').forEach(el => {
-          if (el.innerText.startsWith("\"select ")) {
-            const code = el.innerText.substring(1, el.innerText.length - 1);
-            const html = hljs.highlight(code, {language: "sql"}).value;
-            const quote = '<span class="hljs-string">"</span>'
+            const textElement = el.outerHTML.replace(query, placeholder);
+            const highlightedElement = hljs.highlight(textElement, {
+              language: "html",
+            }).value;
 
-            el.className = ""
-            el.innerHTML = quote + html + quote;
+            const codeElement = document.createElement("code");
+            codeElement.innerHTML = highlightedElement.replace(
+              placeholder,
+              highlightedQuery
+            );
+            previousSibling.appendChild(codeElement);
+            previousSibling.removeAttribute("class");
           }
         });
       });
@@ -74,7 +86,9 @@ I take no responsibility for anything that happens if you choose to ignore this 
 
       <section>
         <h2>So what is this?</h2>
-        <p>Inspired by a discord conversation that started a little like this:</p>
+        <p>
+          Inspired by a discord conversation that started a little like this:
+        </p>
         <blockquote>
           <p>
             Just started wondering if there is a way to read from a database in
@@ -151,12 +165,12 @@ I take no responsibility for anything that happens if you choose to ignore this 
         way.
         <h3>Simple select all</h3>
         <p>List of users with their IDs, names, and ages.</p>
-        <pre><code class="language-html">&lt;sql-table database=&quot;pets.db&quot; query=&quot;<span class="language-sql">select * from users</span>&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre class="example-placeholder"></pre>
         <sql-table database="pets.db" query="select * from users"></sql-table>
 
         <h3>Choosing specific columns and filtering</h3>
         <p>Table headings will reflect the column names used in the query.</p>
-        <pre><code class="language-html">&lt;sql-table database=&quot;pets.db&quot; query=&quot;select name, type as animal from pets where owner = 1&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre class="example-placeholder"></pre>
         <sql-table
           database="pets.db"
           query="select name, type as animal from pets where owner = 1"
@@ -165,12 +179,10 @@ I take no responsibility for anything that happens if you choose to ignore this 
         <h3>Joins e.t.c.</h3>
         <p>
           More advanced queries are possible, even modifications though they
-          won't be persisted and each table has it's own instance of the database
-          so they're very pointless.
+          won't be persisted and each table has it's own instance of the
+          database so they're very pointless.
         </p>
-        <pre><code class="language-html">&lt;sql-table
-  database=&quot;pets.db&quot;
-  query=&quot;select u.name, count(1) as 'pet count' from pets p join users u on p.owner = u.id group by p.owner&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre class="example-placeholder"></pre>
         <sql-table
           database="pets.db"
           query="select distinct u.name, count(1) as 'pet count' from pets p join users u on p.owner = u.id group by p.owner"
@@ -181,7 +193,7 @@ I take no responsibility for anything that happens if you choose to ignore this 
           Well, what did you expect? If there are no results from the query the
           table will still be displayed, it just won't have any rows.
         </p>
-        <pre><code class="language-html">&lt;sql-table database=&quot;pets.db&quot; query=&quot;select * from pets where owner = 1000&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre class="example-placeholder"></pre>
         <sql-table
           database="pets.db"
           query="select * from pets where owner = 1000"
@@ -192,7 +204,7 @@ I take no responsibility for anything that happens if you choose to ignore this 
           Did I mention there's no error handling? If the database file doesn't
           exist or the query has invalid syntax things get a bit messy...
         </p>
-        <pre><code class="language-html">&lt;sql-table database=&quot;pets.db&quot; query=&quot;select ???&quot;&gt;&lt;/sql-table&gt;</code></pre>
+        <pre class="example-placeholder"></pre>
         <sql-table database="pets.db" query="select ???"></sql-table>
       </section>
     </main>
