@@ -9,3 +9,7 @@ I take no responsibility for anything that happens if you choose to ignore this 
 ## Usage
 
 Don't
+
+## Resources
+
+[jswasm/sqlite3.mjs](jswasm/sqlite3.mjs) and [jswasm/sqlite3.wasm](jswasm/sqlite3.wasm) from https://sqlite.org/download.html
