@@ -46,14 +46,14 @@
             </g>
           </svg>
 
-          <pre><strong>Please do not use this</strong>, it's a really awful idea that I threw together as a joke after a friend suggested that html should be able to directly interact with a database. 
+          <pre><strong>Please do not use this</strong>, it's a really awful idea that I threw together as a joke after a friend suggested that html should be able to directly interact with a database.
 I take no responsibility for anything that happens if you choose to ignore this warning.</pre>
         </div>
       </header>
 
       <section>
         <h2>So what is this?</h2>
-        <p>Inspired by a discord converation that started a little like this</p>
+        <p>Inspired by a discord conversation that started a little like this:</p>
         <blockquote>
           <p>
             Just started wondering if there is a way to read from a database in
@@ -61,20 +61,20 @@ I take no responsibility for anything that happens if you choose to ignore this 
           </p>
           <cite>- gusgo99</cite>
         </blockquote>
-        <p>and quickly led to</p>
+        <p>and quickly led to:</p>
         <blockquote>
           <p>&lt;sql query=&quot;SELECT * FROM Foo&quot; /&gt;</p>
           <cite>- moon_president</cite>
         </blockquote>
         <p>
-          This is a custom html element that allows running arbitrary sql
+          This is a custom HTML element that allows running arbitrary sql
           queries on an SQLite database fetched from the server. From a
           practical point of view this is entirely useless and should never be
           used, but it was a fun introduction to web components and I did learn
           a couple of things along the way.
         </p>
         <p>
-          The code can be browsed on github here
+          The code can be browsed on Github
           <a
             href="https://github.com/iCiaran/html-sql-table/blob/main/sql-table.js"
             >here</a
@@ -93,28 +93,28 @@ I take no responsibility for anything that happens if you choose to ignore this 
         </p>
         <ul>
           <li>
-            <strong>Security</strong> What security? The entire sqlite database
-            is sent to the frontend, nothing is private
+            <strong>Security</strong> What security? The entire SQLite database
+            is sent to the front-end, nothing is private.
           </li>
           <li>
             <strong>Performance</strong> No effort has been made to make this
             performant, the UI thread is used even though SQLite explicitly
-            discourage this (use a worker thread instead for long running
-            javascript operations), if multiple tables use the same database
+            discourages this (use a worker thread instead for long running
+            JavaScript operations), if multiple tables use the same database
             file it's loaded each time, the list goes on...
           </li>
           <li>
             <strong>Compatibility</strong> Only SQLite, I did look to see if any
             browser -> database clients existed (even more horrifying), but the
             (lack of) raw TCP socket support in browsers currently makes those
-            not possible
+            not possible.
           </li>
           <li><strong>Error handling</strong> There is none!</li>
           <li>
             <strong>Custom element callbacks</strong> Only
             <code>connectedCallback</code> has been implemented, any time the
             position of these elements in the DOM is manipulated weird things
-            might happen
+            might happen.
           </li>
           <li>
             <strong>More</strong> Likely many more, I really wasn't kidding in
@@ -125,7 +125,7 @@ I take no responsibility for anything that happens if you choose to ignore this 
 
       <section>
         <h2>Examples</h2>
-        A few examples of the element in action, the sqlite database used can be
+        A few examples of the element in action, the SQLite database used can be
         downloaded <a href="pets.db" download>here</a> to browse in a more sane
         way.
         <h3>Simple select all</h3>
@@ -134,21 +134,21 @@ I take no responsibility for anything that happens if you choose to ignore this 
         <sql-table database="pets.db" query="select * from users"></sql-table>
 
         <h3>Choosing specific columns and filtering</h3>
-        <p>Table headings will reflect the column names used in the query</p>
+        <p>Table headings will reflect the column names used in the query.</p>
         <pre><code>&lt;sql-table database=&quot;pets.db&quot; query=&quot;select name, type as animal from pets where owner = 1&quot;&gt;&lt;/sql-table&gt;</code></pre>
         <sql-table
           database="pets.db"
           query="select name, type as animal from pets where owner = 1"
         ></sql-table>
 
-        <h3>Joins etc</h3>
+        <h3>Joins e.t.c.</h3>
         <p>
           More advanced queries are possible, even modifications though they
-          won't persisted and each table has it's own instance of the database
+          won't be persisted and each table has it's own instance of the database
           so they're very pointless.
         </p>
-        <pre><code>&lt;sql-table 
-  database=&quot;pets.db&quot; 
+        <pre><code>&lt;sql-table
+  database=&quot;pets.db&quot;
   query=&quot;select u.name, count(1) as 'pet count' from pets p join users u on p.owner = u.id group by p.owner&quot;&lt;/sql-table&gt;</code></pre>
         <sql-table
           database="pets.db"
