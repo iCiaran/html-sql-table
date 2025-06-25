@@ -5,49 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SQL Table Custom Element</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="highlight.js/github-dark.min.css" />
     <!-- favicon from https://icons8.com/icon/1476/database" -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <script src="sql-table.js" type="module"></script>
-    <script src="highlight.js/highlight.min.js"></script>
-    <script>
-      hljs.configure({ languages: ["html", "sql"] });
-
-      document.addEventListener("DOMContentLoaded", (event) => {
-        const placeholder = "__PLACEHOLDER__";
-        document.querySelectorAll("sql-table").forEach((el) => {
-          const previousSibling = el.previousElementSibling;
-          if (
-            previousSibling &&
-            previousSibling.className === "example-placeholder"
-          ) {
-            const query = el.getAttribute("query");
-            const highlightedQuery = hljs.highlight(query, {
-              language: "sql",
-            }).value;
-
-            const textElement = el.outerHTML.replace(
-              `query="${query}"`,
-              placeholder
-            );
-            const highlightedElement = hljs.highlight(textElement, {
-              language: "html",
-            }).value;
-
-            const quote = '<span class="hljs-string">&quot;</span>';
-            const codeElement = document.createElement("code");
-            codeElement.innerHTML = highlightedElement.replace(
-              `<span class="hljs-attr">${placeholder}</span>`,
-              `<span class="hljs-attr">query</span>=${quote}${highlightedQuery}${quote}`
-            );
-            previousSibling.appendChild(codeElement);
-            previousSibling.removeAttribute("class");
-          }
-        });
-      });
-    </script>
+    <script src="highlight.js" type="module" defer></script>
     <main class="container">
       <header>
         <h1>SQL Table Custom Element</h1>

@@ -1,4 +1,4 @@
-import "./jswasm/sqlite3.mjs";
+import "./vendor/jswasm/sqlite3.mjs";
 
 class SQL extends HTMLElement {
     constructor() {
