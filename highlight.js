@@ -8,33 +8,42 @@ document.adoptedStyleSheets = [sheet];
 hljs.registerLanguage('sql', sql);
 hljs.registerLanguage('xml', xml);
 
-const placeholder = "__PLACEHOLDER__";
-document.querySelectorAll("sql-table").forEach((el) => {
-    const previousSibling = el.previousElementSibling;
+function addExample(element, example) {
+    const placeholder = "__PLACEHOLDER__";
+
+    const query = element.getAttribute("query");
+    const highlightedQuery = hljs.highlight(query, {
+        language: "sql",
+    }).value;
+
+    const textElement = element.outerHTML.replace(
+        `query="${query}"`,
+        placeholder
+    );
+    const highlightedElement = hljs.highlight(textElement, {
+        language: "html",
+    }).value;
+
+    const quote = '<span class="hljs-string">&quot;</span>';
+    const codeElement = document.createElement("code");
+    codeElement.innerHTML = highlightedElement.replace(
+        `<span class="hljs-attr">${placeholder}</span>`,
+        `<span class="hljs-attr">query</span>=${quote}${highlightedQuery}${quote}`
+    );
+    example.appendChild(codeElement);
+    example.removeAttribute("class");
+}
+
+document.querySelectorAll("sql-table, sql-value").forEach((el) => {
     if (
-        previousSibling &&
-        previousSibling.className === "example-placeholder"
+        el.previousElementSibling &&
+        el.previousElementSibling.className === "example-placeholder"
     ) {
-        const query = el.getAttribute("query");
-        const highlightedQuery = hljs.highlight(query, {
-            language: "sql",
-        }).value;
-
-        const textElement = el.outerHTML.replace(
-            `query="${query}"`,
-            placeholder
-        );
-        const highlightedElement = hljs.highlight(textElement, {
-            language: "html",
-        }).value;
-
-        const quote = '<span class="hljs-string">&quot;</span>';
-        const codeElement = document.createElement("code");
-        codeElement.innerHTML = highlightedElement.replace(
-            `<span class="hljs-attr">${placeholder}</span>`,
-            `<span class="hljs-attr">query</span>=${quote}${highlightedQuery}${quote}`
-        );
-        previousSibling.appendChild(codeElement);
-        previousSibling.removeAttribute("class");
+        addExample(el, el.previousElementSibling);
+    } else if (
+        el.parentElement.previousElementSibling &&
+        el.parentElement.previousElementSibling.className === "example-placeholder"
+    ) {
+        addExample(el, el.parentElement.previousElementSibling)
     }
 });

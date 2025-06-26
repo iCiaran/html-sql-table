@@ -132,4 +132,30 @@ class SQLTable extends HTMLElement {
     }
 }
 
+class SQLValue extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    async connectedCallback() {
+        await setupSqlite3();
+
+        const dbPath = this.getAttribute("database");
+        const query = this.getAttribute("query");
+
+        const element = this;
+
+        loadDatabase(dbPath).then((db) => {
+            db.exec({
+                sql: query,
+                rowMode: "$value",
+                callback: function (value) {
+                    element.innerHTML = `<span>${value}</span>`;
+                },
+            });
+        });
+    }
+}
+
 customElements.define("sql-table", SQLTable);
+customElements.define("sql-value", SQLValue);

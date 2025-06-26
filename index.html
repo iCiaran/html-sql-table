@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
     <!-- favicon from https://icons8.com/icon/1476/database" -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <script src="sql-table.js" type="module" defer></script>
+    <script src="sql-element.js" type="module" defer></script>
     <script src="highlight.js" type="module" defer></script>
   </head>
   <body>
@@ -130,6 +130,28 @@ I take no responsibility for anything that happens if you choose to ignore this 
         A few examples of the element in action, the SQLite database used can be
         downloaded <a href="pets.db" download>here</a> to browse in a more sane
         way.
+        <h3>Single value selection</h3>
+        <p>
+          Single values can be selected from the database using the
+          <code>&lt;sql-value&gt;</code> element.
+        </p>
+        <p>
+          For a single value the field returned <strong>must</strong> be named
+          <code>value</code> in the SQL statement.
+        </p>
+        <p>
+          If multiple rows are returned then the value from the first row is
+          used.
+        </p>
+        <pre class="example-placeholder"></pre>
+        <p>
+          The pet with the name 'Rex' is a
+          <sql-value
+            database="pets.db"
+            query="select type value from pets where name='Rex'"
+          ></sql-value>
+          .
+        </p>
         <h3>Simple select all</h3>
         <p>List of users with their IDs, names, and ages.</p>
         <pre class="example-placeholder"></pre>
