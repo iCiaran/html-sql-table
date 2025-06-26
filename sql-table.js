@@ -1,23 +1,43 @@
 import "./vendor/jswasm/sqlite3.mjs";
 
-class SQL extends HTMLElement {
+let setupPromise = null;
+
+async function loadDatabase(dbPath) {
+    return fetch(dbPath)
+        .then((response) => response.arrayBuffer())
+        .then((buffer) => {
+            const p = sqlite3.wasm.allocFromTypedArray(buffer);
+            const db = new sqlite3.oo1.DB();
+            const rc = sqlite3.capi.sqlite3_deserialize(
+                db.pointer,
+                "main",
+                p,
+                buffer.byteLength,
+                buffer.byteLength,
+                sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
+            );
+            db.checkRc(rc);
+            return db;
+        })
+}
+
+async function setupSqlite3() {
+    if (!setupPromise) {
+        setupPromise = window
+            .sqlite3InitModule()
+            .then((sqlite3) => (globalThis.sqlite3 = sqlite3));
+    }
+
+    await setupPromise;
+}
+
+class SQLTable extends HTMLElement {
     constructor() {
         super();
     }
 
-    static setupPromise = null;
-
     async connectedCallback() {
-        if (!SQL.setupPromise) {
-            SQL.setupPromise = window
-                .sqlite3InitModule()
-                .then((sqlite3) => (globalThis.sqlite3 = sqlite3));
-        }
-
-        await SQL.setupPromise;
-
-        const dbPath = this.getAttribute("database");
-        const query = this.getAttribute("query");
+        await setupSqlite3();
 
         const shadow = this.attachShadow({ mode: "open" });
 
@@ -78,51 +98,38 @@ class SQL extends HTMLElement {
                 word-break: break-word;
             }
 `;
-
         shadow.appendChild(style);
+
         const table = document.createElement("table");
         shadow.appendChild(table);
 
-        fetch(dbPath)
-            .then((response) => response.arrayBuffer())
-            .then((buffer) => {
-                const p = sqlite3.wasm.allocFromTypedArray(buffer);
-                const db = new sqlite3.oo1.DB();
-                const rc = sqlite3.capi.sqlite3_deserialize(
-                    db.pointer,
-                    "main",
-                    p,
-                    buffer.byteLength,
-                    buffer.byteLength,
-                    sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
-                );
-                db.checkRc(rc);
-                return db;
-            })
-            .then((db) => {
-                let columnNames = new Array();
+        const dbPath = this.getAttribute("database");
+        const query = this.getAttribute("query");
 
-                db.exec({
-                    sql: query,
-                    rowMode: "array",
-                    callback: function (row) {
-                        const tableRow = table.insertRow(-1);
-                        row.forEach((cell, index) => {
-                            tableRow.insertCell(index).innerHTML = cell;
-                        });
-                    },
-                    columnNames: columnNames,
-                });
+        loadDatabase(dbPath).then((db) => {
+            let columnNames = new Array();
 
-                var header = table.createTHead();
-                var headerRow = header.insertRow(0);
-                columnNames.forEach((name, index) => {
-                    const cell = headerRow.insertCell(index);
-                    cell.innerHTML = name;
-                    cell.outerHTML = `<th>${cell.innerHTML}</th>`;
-                });
+            db.exec({
+                sql: query,
+                rowMode: "array",
+                callback: function (row) {
+                    const tableRow = table.insertRow(-1);
+                    row.forEach((cell, index) => {
+                        tableRow.insertCell(index).innerHTML = cell;
+                    });
+                },
+                columnNames: columnNames,
             });
+
+            var header = table.createTHead();
+            var headerRow = header.insertRow(0);
+            columnNames.forEach((name, index) => {
+                const cell = headerRow.insertCell(index);
+                cell.innerHTML = name;
+                cell.outerHTML = `<th>${cell.innerHTML}</th>`;
+            });
+        });
     }
 }
 
-customElements.define("sql-table", SQL);
+customElements.define("sql-table", SQLTable);
