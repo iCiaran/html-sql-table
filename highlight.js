@@ -2,18 +2,17 @@ import hljs from './vendor/highlight.js/core.min.js';
 import sql from './vendor/highlight.js/sql.min.js';
 import xml from './vendor/highlight.js/xml.min.js';
 
-const supportsConstructableStylesheets = 'adoptedStyleSheets' in Document.prototype;
 
-if (supportsConstructableStylesheets) {
-    import('./vendor/highlight.js/github-dark.min.css', { with: { type: 'css' } }).then((exports) => {
+import('./vendor/highlight.js/github-dark.min.css', { with: { type: 'css' } })
+    .then((exports) => {
         document.adoptedStyleSheets = [exports.default];
+    }).catch((_) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './vendor/highlight.js/github-dark.min.css';
+        document.head.appendChild(link);
     });
-} else {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = './vendor/highlight.js/github-dark.min.css';
-    document.head.appendChild(link);
-}
+
 
 hljs.registerLanguage('sql', sql);
 hljs.registerLanguage('xml', xml);
